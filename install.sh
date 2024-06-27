@@ -167,6 +167,12 @@ fi
 # Clone modsecurity.d repository
 git clone https://github.com/unixweb-info/modsecurity.d.git "$modsecurity_dir" || error_exit "Failed to clone modsecurity.d repository"
 
+# Navigate to the 'coreruleset' directory in 'modsecurity_dir'
+cd $modsecurity_dir/coreruleset
+
+# Remove specific files and directories from the 'coreruleset' directory
+rm -rf $modsecurity_dir/coreruleset/{.github,.gitignore,.gitmodules,.travis.yml}
+
 # Inform user about completion of basic setup
 echo "The basic setup is complete, then you need to perform additional setup manually."
 log_message "Basic setup completed"
