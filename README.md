@@ -114,6 +114,14 @@ echo "Setup completed successfully"
 
 You can find the installation log file at `/var/log/install-modsecurity3-for-Nginx.log`.
 
+## OWASP Rules Update
+
+The command "OWASP Rules Update" downloads a shell script (`upgrade-rules.sh`) from a GitHub repository (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh`), sets executable permissions for the script using `sudo chmod +x`, and then executes the script (`./upgrade-rules.sh`). This process updates OWASP ModSecurity rules for Nginx web servers.
+
+```bash
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && sudo chmod+x ./upgrade-rules.sh && ./upgrade-rules.sh
+```
+
 ## Contact
 
 For more information or questions about the script, you can contact me at the following contacts:
