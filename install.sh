@@ -144,6 +144,14 @@ log_message "Nginx.conf updated with ModSecurity module and rules"
 echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
 log_message "Directory for nginx modules and modsecurity3.conf created"
 
+# Create a modsec_audit.log file in the /var/log/nginx directory
+# If the file already exists, the touch command will update the last access time
+touch /var/log/nginx/modsec_audit.log
+
+# Change the owner and group of the modsec_audit.log file to nginx and adm, respectively
+# This is necessary so that the nginx process can write data to this file
+chown nginx:adm /var/log/nginx/modsec_audit.log
+
 # Directory path
 modsecurity_dir="/etc/nginx/modsecurity.d"
 
