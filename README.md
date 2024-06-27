@@ -82,16 +82,19 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     wget "http://nginx.org/download/$nginx_tar" || error_exit "Failed to download nginx source code"
     tar xfz $nginx_tar || error_exit "Failed to extract nginx source code"
     cd "nginx-$nginx_version"
-    ./configure --with-compat --add-dynamic-module=$modsecurity_nginx_dir --with-ld-opt="-L$modsecurity_lib_dir" --with-cc-opt="-I$modsecurity_include_dir" || error_exit "Failed to configure nginx with ModSecurity module"
+    ./configure --with-compat --with-http_ssl_module --add-dynamic-module=$modsecurity_nginx_dir --with-ld-opt="-L$modsecurity_lib_dir" --with-cc-opt="-I$modsecurity_include_dir" || error_exit "Failed to configure nginx with ModSecurity module"
     make modules && cp objs/ngx_http_modsecurity_module.so /usr/lib64/nginx/modules/ || error_exit "Failed to make and copy ModSecurity module to nginx modules directory"
     log_message "Nginx configured with ModSecurity module"
     ```
 
 7. **Configure Nginx to use ModSecurity**:
     ```bash
-    sed -i '8a include /usr/share/nginx/modules/*.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
-    sed -i '30a#\n    modsecurity on;\n    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
+    sed -i '8a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
+    sed -i '46i\    modsecurity on;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
+    sed -i '47i\    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
     log_message "Nginx.conf updated with ModSecurity module and rules"
+    echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
+    log_message "Directory for nginx modules and modsecurity3.conf created"
     ```
 
 8. **Clean up temporary files and restart Nginx**:
