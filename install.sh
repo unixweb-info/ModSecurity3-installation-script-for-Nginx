@@ -130,12 +130,13 @@ log_message "Nginx configured with ModSecurity module"
 
 # Update nginx.conf to include ModSecurity module and rules
 sed -i '8a include /usr/share/nginx/modules/*.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
-sed -i '30a#\n    modsecurity on;\n    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
+sed -i '46i\    modsecurity on;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
+sed -i '47i\    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
 log_message "Nginx.conf updated with ModSecurity module and rules"
 
 # Create directory for nginx modules and create modsecurity3.conf file
-mkdir -p /usr/share/nginx/modules || error_exit "Failed to create directory for nginx modules"
-echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /usr/share/nginx/modules/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
+mkdir /etc/nginx/modules-enabled || error_exit "Failed to create directory for nginx modules"
+echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
 log_message "Directory for nginx modules and modsecurity3.conf created"
 
 # Directory path
