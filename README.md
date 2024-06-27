@@ -89,9 +89,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 
 7. **Configure Nginx to use ModSecurity**:
     ```bash
-    if ! grep -q "include /etc/nginx/modules-enabled/\*.conf;" /etc/nginx/nginx.conf; then
-      sed -i '8a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
-    fi
+    grep -q "include /etc/nginx/modules-enabled/*.conf;" /etc/nginx/nginx.conf || sed -i '8a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf
     sed -i '46i\    modsecurity on;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
     sed -i '47i\    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
     log_message "Nginx.conf updated with ModSecurity module and rules"
