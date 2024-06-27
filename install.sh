@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2024 Author: Kriachko Aleksei admin@unixweb.info
+# Check if the script is being run as root or by a user in the sudo group
 
 # Check if script is run as root
 if [ "$(id -u)" -ne 0 ]; then
