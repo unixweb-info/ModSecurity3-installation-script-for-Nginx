@@ -111,6 +111,14 @@ echo "Setup completed successfully"
 
 Вы можете найти лог файл установки по пути `/var/log/install-modsecurity3-for-Nginx.log`.
 
+## Установка ModSecurity, ModSecurity Nginx коннектора и правил OWASP
+
+Сценарий "Установка ModSecurity, ModSecurity Nginx коннектора и правил OWASP" загружает сценарий оболочки (`install.sh`) из репозитория GitHub (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh`), устанавливает разрешения на выполнение сценария с помощью `sudo chmod +x`, а затем выполняет скрипт (`./install.sh`). Этот процесс устанавливает ModSecurity, ModSecurity Nginx коннектор и правила OWASP для веб-сервера Nginx.
+
+```bash
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh && sudo chmod+x ./install.sh && sudo ./install.sh
+```
+
 ## Обновление правил OWASP
 
 Команда "Обновление правил OWASP" загружает сценарий оболочки (`upgrade-rules.sh`) из репозитория GitHub (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh`), устанавливает разрешения на выполнение скрипта, используя `sudo chmod +x`, а затем выполняет скрипт (`./upgrade-rules.sh`). Этот процесс обновляет правила OWASP ModSecurity для веб-серверов Nginx.
