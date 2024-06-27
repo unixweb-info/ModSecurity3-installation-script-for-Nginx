@@ -135,7 +135,10 @@ sed -i '47i\    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf
 log_message "Nginx.conf updated with ModSecurity module and rules"
 
 # Create directory for nginx modules and create modsecurity3.conf file
-mkdir /etc/nginx/modules-enabled || error_exit "Failed to create directory for nginx modules"
+if [ ! -d "/etc/nginx/modules-enabled" ]; then
+  mkdir /etc/nginx/modules-enabled || error_exit "Failed to create directory for nginx modules"
+fi
+
 echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
 log_message "Directory for nginx modules and modsecurity3.conf created"
 
