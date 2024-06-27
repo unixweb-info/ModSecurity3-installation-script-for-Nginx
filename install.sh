@@ -124,7 +124,7 @@ tar xfz $nginx_tar || error_exit "Failed to extract nginx source code"
 cd "nginx-$nginx_version"
 
 # Configure nginx with ModSecurity module 
-./configure --with-compat --add-dynamic-module=$modsecurity_nginx_dir --with-ld-opt="-L$modsecurity_lib_dir" --with-cc-opt="-I$modsecurity_include_dir" || error_exit "Failed to configure nginx with ModSecurity module"
+./configure --with-compat --with-http_ssl_module --add-dynamic-module=$modsecurity_nginx_dir --with-ld-opt="-L$modsecurity_lib_dir" --with-cc-opt="-I$modsecurity_include_dir" || error_exit "Failed to configure nginx with ModSecurity module"
 make modules && cp objs/ngx_http_modsecurity_module.so /usr/lib64/nginx/modules/ || error_exit "Failed to make and copy ModSecurity module to nginx modules directory"
 log_message "Nginx configured with ModSecurity module"
 
