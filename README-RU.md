@@ -116,7 +116,7 @@ echo "Setup completed successfully"
 Команда "Обновление правил OWASP" загружает сценарий оболочки (`upgrade-rules.sh`) из репозитория GitHub (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh`), устанавливает разрешения на выполнение скрипта, используя `sudo chmod +x`, а затем выполняет скрипт (`./upgrade-rules.sh`). Этот процесс обновляет правила OWASP ModSecurity для веб-серверов Nginx.
 
 ```bash
-wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && sudo chmod+x ./upgrade-rules.sh && ./upgrade-rules.sh
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && sudo chmod+x ./upgrade-rules.sh && sudo ./upgrade-rules.sh
 ```
 
 ## Контакт
