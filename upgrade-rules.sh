@@ -36,12 +36,12 @@ fi
 /usr/bin/git config --global http.postBuffer 524288000
 
 # Check the exit status of the git clone command
-/usr/bin/git clone https://github.com/SpiderLabs/owasp-modsecurity-crs.git $modsecurity_dir_coreruleset || { echo "Failed to clone repository"; exit 1; }
+/usr/bin/git clone https://github.com/coreruleset/coreruleset.git $modsecurity_dir_coreruleset || { echo "Failed to clone repository"; exit 1; }
 
 /bin/mv $modsecurity_dir_coreruleset/crs-setup.conf.example $modsecurity_dir_coreruleset/crs-setup.conf
 
 # Remove specific files and directories from the 'coreruleset' directory
-/bin/rm -rf $modsecurity_dir_coreruleset/{.github,.gitignore,.gitmodules,.travis.yml,CHANGES,CONTRIBUTING.md,CONTRIBUTORS.md,docs,INSTALL,KNOWN_BUGS,LICENSE,README.md,SECURITY.md,tests,util}
+/bin/rm -rf $modsecurity_dir_coreruleset/{.github,docs,plugins,regex-assembly,tests,util,.editorconfig,.gitignore,.gitmodules,.linelint.yml,.pre-commit-config.yaml,.yamllint.yml,CHANGES.md,CONTRIBUTING.md,CONTRIBUTORS.md,INSTALL.md,KNOWN_BUGS.md,LICENSE,README.md,SECURITY.md,SPONSORS.md,renovate.json}
 
 /bin/mv $modsecurity_dir_coreruleset/rules $modsecurity_dir_coreruleset/activated_rules
 
