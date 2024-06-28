@@ -169,9 +169,6 @@ fi
 # Clone modsecurity.d repository
 git clone https://github.com/unixweb-info/modsecurity.d.git "$modsecurity_dir" || error_exit "Failed to clone modsecurity.d repository"
 
-# Navigate to the 'coreruleset' directory in 'modsecurity_dir'
-cd $modsecurity_dir/coreruleset
-
 # Remove specific files and directories from the 'coreruleset' directory
 rm -rf $modsecurity_dir/coreruleset/{.github,.gitignore,.gitmodules,.travis.yml}
 
