@@ -86,6 +86,9 @@ log_message "Necessary packages installed"
 dnf install $other_packages -y || error_exit "Failed to install other and required packages"
 dnf install $nginx_packages -y || error_exit "Failed to install Nginx and required packages"
 dnf install $modsecurity_packages -y || error_exit "Failed to install modsecurity packages"
+# Installing the libmodsecurity package
+dnf install libmodsecurity -y  || error_exit "Failed to install libmodsecurity dependency package"
+log_message "The libmodsecurity package is installed"
 log_message "Necessary packages installed"
 
 # Clone ModSecurity repository and checkout the v3/master branch
@@ -179,10 +182,6 @@ log_message "Basic setup completed"
 # Removing packages with modsecurity dependencies
 dnf remove $modsecurity_packages -y || error_exit "Failed to remove packages with modsecurity dependencies"
 log_message "Installed packages have been removed"
-
-# Installing the libmodsecurity package
-dnf install libmodsecurity -y  || error_exit "Failed to install libmodsecurity dependency package"
-log_message "The libmodsecurity package is installed"
 
 # Restart nginx service 
 systemctl restart nginx || warn "Failed to restart nginx service"
