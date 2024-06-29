@@ -20,7 +20,7 @@ function check_os {
     exit 1
 }
 
-old_version=3.2.0
+old_version=3.2
 modsecurity_dir_coreruleset=/etc/nginx/modsecurity.d/coreruleset
 
 # Check if the directory exists before trying to move it
