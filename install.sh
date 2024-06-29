@@ -96,7 +96,7 @@ if [ -d "/usr/local/src/ModSecurity" ]; then
     rm -rf /usr/local/src/ModSecurity || error_exit "Failed to remove existing directory /usr/local/src/ModSecurity"
 fi
 
-git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity /usr/local/src/ModSecurity/  || error_exit "Failed to clone ModSecurity repository"
+git clone --depth 1 -b v3/master --single-branch https://github.com/owasp-modsecurity/ModSecurity.git /usr/local/src/ModSecurity/  || error_exit "Failed to clone ModSecurity repository"
 
 cd /usr/local/src/ModSecurity/
 git submodule init
@@ -111,7 +111,7 @@ modsecurity_nginx_dir="/usr/local/src/ModSecurity-nginx"
 if [ -d "$modsecurity_nginx_dir" ] && [ "$(ls -A $modsecurity_nginx_dir)" ]; then
     log_message "Directory $modsecurity_nginx_dir already exists and is not empty, skipping clone"
 else
-    git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git $modsecurity_nginx_dir || error_exit "Failed to clone ModSecurity-nginx repository"
+    git clone --depth 1 https://github.com/owasp-modsecurity/ModSecurity-nginx.git $modsecurity_nginx_dir || error_exit "Failed to clone ModSecurity-nginx repository"
 fi
 
 # Set library and include paths
@@ -148,12 +148,12 @@ log_message "Nginx.conf updated with ModSecurity module and rules"
 echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
 log_message "Directory for nginx modules and modsecurity3.conf created"
 
-# Create a modsec_audit.log file and a ModSecurity-Debug.log file in the /var/log/nginx directory.
+# Create a modsec_audit.log file and a modsec_debug.log file in the /var/log/nginx directory.
 # If the file already exists, the touch command will update the last access time
 touch /var/log/nginx/modsec_audit.log
 touch /var/log/nginx/modsec_debug.log
 
-# Change the owner and group of the modsec_audit.log file and the ModSecurity-Debug.log file to nginx and adm respectively.
+# Change the owner and group of the modsec_audit.log file and the modsec_debug.log file to nginx and adm respectively.
 # This is necessary so that the nginx process can write data to this file
 chown nginx:adm /var/log/nginx/modsec_audit.log
 chown nginx:adm /var/log/nginx/modsec_debug.log
