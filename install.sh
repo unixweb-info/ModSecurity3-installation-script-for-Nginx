@@ -45,7 +45,7 @@ log_message "SELinux enforcement disabled"
 # Define package variables
 other_packages="git wget dnf-utils nano"
 nginx_packages="httpd-devel pcre pcre-devel libxml2 libxml2-devel curl curl-devel openssl openssl-devel nginx"
-modsecurity_packages="doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country GeoIP-devel"
+modsecurity_packages="doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country GeoIP-devel libmodsecurity"
 epel_packages="https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm"
 remi_repo="http://rpms.remirepo.net/enterprise/remi-release-9.rpm"
 nginx_repo_file="/etc/yum.repos.d/nginx.repo"
@@ -86,8 +86,6 @@ log_message "Necessary packages installed"
 dnf install $other_packages -y || error_exit "Failed to install other and required packages"
 dnf install $nginx_packages -y || error_exit "Failed to install Nginx and required packages"
 dnf install $modsecurity_packages -y || error_exit "Failed to install modsecurity packages"
-# Installing the libmodsecurity package
-dnf install libmodsecurity -y  || error_exit "Failed to install libmodsecurity dependency package"
 log_message "The libmodsecurity package is installed"
 log_message "Necessary packages installed"
 
@@ -179,6 +177,15 @@ log_message "Basic setup completed"
 # Removing packages with modsecurity dependencies
 dnf remove $modsecurity_packages -y || error_exit "Failed to remove packages with modsecurity dependencies"
 log_message "Installed packages have been removed"
+
+# Check if libmodsecurity package is installed
+if! rpm -q libmodsecurity >/dev/null 2>&1; then
+ echo "libmodsecurity package is not installed. Trying to install..."
+ dnf install libmodsecurity -y || error_exit "Failed to install libmodsecurity package"
+ log_message "libmodsecurity package is already installed"
+else
+ echo "libmodsecurity package is already installed."
+fi
 
 # Restart nginx service 
 systemctl restart nginx || warn "Failed to restart nginx service"
