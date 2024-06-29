@@ -117,6 +117,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     ```
     
 8. **Creating log files modsec_audit.log and modsec_debug.log**:
+
     Create a modsec_audit.log file and a modsec_debug.log file in the /var/log/nginx directory.
     If the file already exists, the touch command will update the last access time
     ```bash
