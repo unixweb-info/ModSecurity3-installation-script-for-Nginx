@@ -119,7 +119,7 @@ You can find the installation log file at `/var/log/install-modsecurity3-for-Ngi
 The "Install ModSecurity, ModSecurity Nginx connector and OWASP rules" script loads a shell script (`install.sh`) from a GitHub repository (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh`), sets executable permissions for the script using `sudo chmod +x`, and then executes the script (`./install.sh`). This process installs ModSecurity, ModSecurity Nginx connector and OWASP rules for the Nginx web server.
 
 ```bash
-wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh && sudo chmod+x ./install.sh && sudo ./install.sh
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh && chmod+x ./install.sh && sudo ./install.sh
 ```
 
 ## OWASP Rules Update
@@ -127,7 +127,7 @@ wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/
 The "OWASP Rules Update" script loads a shell script (`upgrade-rules.sh`) from a GitHub repository (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh`), sets executable permissions for the script using `sudo chmod +x`, and then executes the script (`./upgrade-rules.sh`). This process updates OWASP ModSecurity rules for Nginx web servers.
 
 ```bash
-wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && sudo chmod+x ./upgrade-rules.sh && sudo ./upgrade-rules.sh
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && chmod+x ./upgrade-rules.sh && sudo ./upgrade-rules.sh
 ```
 
 ## Contact
