@@ -56,7 +56,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 
 4. **Install required packages and repositories**:
     ```bash
-    cat <<EOF > /etc/yum.repos.d/nginx.repo
+    sudo cat <<EOF > /etc/yum.repos.d/nginx.repo
     [nginx-stable]
     name=nginx stable repo
     baseurl=http://nginx.org/packages/rhel/\$releasever/\$basearch/
@@ -73,67 +73,69 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     gpgkey=https://nginx.org/keys/nginx_signing.key
     module_hotfixes=true
     EOF
-    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm -y || error_exit "Failed to install epel-release and epel-next-release packages"
-    dnf install http://rpms.remirepo.net/enterprise/remi-release-9.rpm -y || error_exit "Failed to install remi-release-9.rpm package"
-    dnf config-manager --set-enabled crb -y || error_exit "Failed to enable crb repository"
-    dnf --enablerepo=remi install GeoIP-devel -y || error_exit "Failed to install GeoIP-devel package from remi repository"
+    sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm -y
+    sudo dnf install http://rpms.remirepo.net/enterprise/remi-release-9.rpm -y
+    sudo dnf config-manager --set-enabled crb -y
+    sudo dnf --enablerepo=remi install GeoIP-devel -y
     # Install additional packages
-    dnf install git wget dnf-utils nano -y || error_exit "Failed to install other and required packages"
-    dnf install httpd-devel pcre pcre-devel libxml2 libxml2-devel curl curl-devel openssl openssl-devel nginx -y || error_exit "Failed to install Nginx and required packages"
-    dnf install doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country -y || error_exit "Failed to install modsecurity packages"
+    sudo dnf install git wget dnf-utils nano -y
+    vdnf install httpd-devel pcre pcre-devel libxml2 libxml2-devel curl curl-devel openssl openssl-devel nginx -y
+    sudo dnf install doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country -y
     
     # Installing the libmodsecurity package
-    dnf install libmodsecurity -y  || error_exit "Failed to install libmodsecurity dependency package"
+    sudo dnf install libmodsecurity -y
     ```
 
 5. **Clone and install ModSecurity**:
     ```bash
-    git clone --depth 1 -b v3/master --single-branch https://github.com/owasp-modsecurity/ModSecurity.git /usr/local/src/ModSecurity/  || error_exit "Failed to clone ModSecurity repository"
-    cd /usr/local/src/ModSecurity/
-    git submodule init
-    git submodule update
-    ./build.sh && ./configure && make -j"$(($(nproc) / 2))" && make install || error_exit "Failed to build and install ModSecurity"
-    log_message "ModSecurity built and installed"
+    sudo git clone --depth 1 -b v3/master --single-branch https://github.com/owasp-modsecurity/ModSecurity.git /usr/local/src/ModSecurity/
+    sudo cd /usr/local/src/ModSecurity/
+    sudo git submodule init
+    sudo git submodule update
+    sudo ./build.sh && sudo ./configure && sudo make -j"$(($(nproc) / 2))" && sudo make install
     ```
 
 6. **Clone and compile the ModSecurity module for Nginx**:
     ```bash
-    git clone --depth 1 https://github.com/owasp-modsecurity/ModSecurity-nginx.git /usr/local/src/ModSecurity-nginx || error_exit "Failed to clone ModSecurity-nginx repository"
-    cd /usr/local/src/nginx/
-    nginx_version=$(nginx -v 2>&1 | cut -d '/' -f 2)
-    nginx_tar="nginx-$nginx_version.tar.gz"
-    wget "http://nginx.org/download/$nginx_tar" || error_exit "Failed to download nginx source code"
-    tar xfz $nginx_tar || error_exit "Failed to extract nginx source code"
-    cd "nginx-$nginx_version"
-    ./configure --with-compat --with-http_ssl_module --add-dynamic-module=/usr/local/src/ModSecurity-nginx --with-ld-opt="-L/usr/local/modsecurity/lib" --with-cc-opt="-I/usr/local/modsecurity/include" || error_exit "Failed to configure nginx with ModSecurity module"
-    make modules && cp objs/ngx_http_modsecurity_module.so /usr/lib64/nginx/modules/ || error_exit "Failed to make and copy ModSecurity module to nginx modules directory"
-    log_message "Nginx configured with ModSecurity module"
+    sudo git clone --depth 1 https://github.com/owasp-modsecurity/ModSecurity-nginx.git /usr/local/src/ModSecurity-nginx || error_exit "Failed to clone ModSecurity-nginx repository"
+    sudo cd /usr/local/src/nginx/
+    sudo nginx_version=$(nginx -v 2>&1 | cut -d '/' -f 2)
+    sudo nginx_tar="nginx-$nginx_version.tar.gz"
+    sudo wget "http://nginx.org/download/$nginx_tar"
+    sudo tar xfz $nginx_tar
+    sudo cd "nginx-$nginx_version"
+    sudo ./configure --with-compat --with-http_ssl_module --add-dynamic-module=/usr/local/src/ModSecurity-nginx --with-ld-opt="-L/usr/local/modsecurity/lib" --with-cc-opt="-I/usr/local/modsecurity/include"
+    sudo make modules && cp objs/ngx_http_modsecurity_module.so /usr/lib64/nginx/modules/
     ```
 
 7. **Configure Nginx to use ModSecurity**:
     ```bash
-    grep -q "include /etc/nginx/modules-enabled/*.conf;" /etc/nginx/nginx.conf || sed -i '8a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf
-    sed -i '46i\    modsecurity on;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
-    sed -i '47i\    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf || error_exit "Failed to update nginx.conf"
-    log_message "Nginx.conf updated with ModSecurity module and rules"
-    echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf || error_exit "Failed to create modsecurity3.conf file"
-    log_message "Directory for nginx modules and modsecurity3.conf created"
+    sudo grep -q "include /etc/nginx/modules-enabled/*.conf;" /etc/nginx/nginx.conf || sed -i '8a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf
+    sudo sed -i '46i\    modsecurity on;' /etc/nginx/nginx.conf
+    sudo sed -i '47i\    modsecurity_rules_file /etc/nginx/modsecurity.d/modsecurity.conf;' /etc/nginx/nginx.conf
+    sudo echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf
     ```
-
-8. **Clean up temporary files and restart Nginx**:
+    
+8. **Creating log files modsec_audit.log and modsec_debug.log**:
+    Create a modsec_audit.log file and a modsec_debug.log file in the /var/log/nginx directory.
+    If the file already exists, the touch command will update the last access time
     ```bash
-    rm -rf /usr/local/src/* || error_exit "Failed to clean up downloaded source files"
-    log_message "Downloaded source files cleaned up"
-    systemctl restart nginx || warn "Failed to restart nginx service"
-    log_message "Nginx service restarted"
+    sudo touch /var/log/nginx/modsec_audit.log
+    sudo touch /var/log/nginx/modsec_debug.log
     ```
-
-## Completion
-
-After successful execution of the script, the following message will be displayed:
-```bash
-echo "Setup completed successfully"
-```
+    
+    Change the owner and group of the modsec_audit.log file and the modsec_debug.log file to nginx and adm respectively.
+    This is necessary so that the nginx process can write data to this file
+    ```bash
+    sudo chown nginx:adm /var/log/nginx/modsec_audit.log
+    sudo chown nginx:adm /var/log/nginx/modsec_debug.log
+    ```
+    
+9. **Clean up temporary files and restart Nginx**:
+    ```bash
+    sudo rm -rf /usr/local/src/*
+    sudo systemctl restart nginx
+    ```
 
 You can find the installation log file at `/var/log/install-modsecurity3-for-Nginx.log`.
 
