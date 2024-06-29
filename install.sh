@@ -45,7 +45,7 @@ log_message "SELinux enforcement disabled"
 # Define package variables
 other_packages="git wget dnf-utils nano"
 nginx_packages="httpd-devel pcre pcre-devel libxml2 libxml2-devel curl curl-devel openssl openssl-devel nginx"
-modsecurity_packages="doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country GeoIP-devel"
+modsecurity_packages="doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country"
 epel_packages="https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm"
 remi_repo="http://rpms.remirepo.net/enterprise/remi-release-9.rpm"
 nginx_repo_file="/etc/yum.repos.d/nginx.repo"
