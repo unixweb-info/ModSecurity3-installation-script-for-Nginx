@@ -28,33 +28,18 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 
 ## Main Steps of the Script
 
-1. **Check if the script is run as root**:
+1. **Check if the operating system is supported**:
     ```bash
-    if [ "$(id -u)" -ne 0 ]; then
-        echo "This script must be run as root" >&2
-        exit 1
-    fi
+    cat /etc/*release | grep '^PRETTY_NAME=' | cut -d '=' -f 2 | tr -d '"'
     ```
 
-2. **Check if the operating system is supported**:
-    ```bash
-    supported_os=("CentOS Stream 9" "AlmaLinux 9\.[0-9] \(Seafoam Ocelot\)" "Rocky Linux 9\.[0-9] \(Blue Onyx\)")
-    current_os=$(cat /etc/*release | grep '^PRETTY_NAME=' | cut -d '=' -f 2 | tr -d '"')
-    for os in "${supported_os[@]}"; do
-        if [[ "$current_os" =~ $os ]]; then
-            return 0
-        fi
-    done
-    return 1
-    ```
-
-3. **Temporarily disable SELinux enforcement**:
+2. **Temporarily disable SELinux enforcement**:
     ```bash
     setenforce 0 || error_exit "Failed to disable SELinux"
     log_message "SELinux enforcement disabled"
     ```
 
-4. **Install required packages and repositories**:
+3. **Install required packages and repositories**:
     ```bash
     sudo cat <<EOF > /etc/yum.repos.d/nginx.repo
     [nginx-stable]
@@ -86,7 +71,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     sudo dnf install libmodsecurity -y
     ```
 
-5. **Clone and install ModSecurity**:
+4. **Clone and install ModSecurity**:
     ```bash
     sudo git clone --depth 1 -b v3/master --single-branch https://github.com/owasp-modsecurity/ModSecurity.git /usr/local/src/ModSecurity/
     sudo cd /usr/local/src/ModSecurity/
@@ -95,7 +80,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     sudo ./build.sh && sudo ./configure && sudo make -j"$(($(nproc) / 2))" && sudo make install
     ```
 
-6. **Clone and compile the ModSecurity module for Nginx**:
+5. **Clone and compile the ModSecurity module for Nginx**:
     ```bash
     sudo git clone --depth 1 https://github.com/owasp-modsecurity/ModSecurity-nginx.git /usr/local/src/ModSecurity-nginx || error_exit "Failed to clone ModSecurity-nginx repository"
     sudo cd /usr/local/src/nginx/
@@ -108,7 +93,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     sudo make modules && cp objs/ngx_http_modsecurity_module.so /usr/lib64/nginx/modules/
     ```
 
-7. **Configure Nginx to use ModSecurity**:
+6. **Configure Nginx to use ModSecurity**:
     ```bash
     sudo grep -q "include /etc/nginx/modules-enabled/*.conf;" /etc/nginx/nginx.conf || sed -i '8a include /etc/nginx/modules-enabled/*.conf;' /etc/nginx/nginx.conf
     sudo sed -i '46i\    modsecurity on;' /etc/nginx/nginx.conf
@@ -116,7 +101,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     sudo echo 'load_module "/usr/lib64/nginx/modules/ngx_http_modsecurity_module.so";' > /etc/nginx/modules-enabled/modsecurity3.conf
     ```
     
-8. **Creating log files modsec_audit.log and modsec_debug.log**:
+7. **Creating log files modsec_audit.log and modsec_debug.log**:
 
     Create a modsec_audit.log file and a modsec_debug.log file in the /var/log/nginx directory.
     If the file already exists, the touch command will update the last access time
@@ -132,7 +117,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
     sudo chown nginx:adm /var/log/nginx/modsec_debug.log
     ```
     
-9. **Clean up temporary files and restart Nginx**:
+8. **Clean up temporary files and restart Nginx**:
     ```bash
     sudo rm -rf /usr/local/src/*
     sudo systemctl restart nginx
