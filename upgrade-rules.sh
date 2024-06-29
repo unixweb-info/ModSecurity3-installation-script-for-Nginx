@@ -21,6 +21,7 @@ function check_os {
 }
 
 old_version=3.2
+modsecurity_dir=/etc/nginx/modsecurity.d
 modsecurity_dir_coreruleset=/etc/nginx/modsecurity.d/coreruleset
 
 # Check if the directory exists before trying to move it
@@ -40,8 +41,12 @@ fi
 
 /bin/mv $modsecurity_dir_coreruleset/crs-setup.conf.example $modsecurity_dir_coreruleset/crs-setup.conf
 
+# Remove specific files and directories from the 'modsecurity.d' directory
+/bin/rm -rf $modsecurity_dir/{.DS_Store,.git,.gitattributes}
+
 # Remove specific files and directories from the 'coreruleset' directory
 /bin/rm -rf $modsecurity_dir_coreruleset/{.github,docs,plugins,regex-assembly,tests,util,.editorconfig,.gitignore,.gitmodules,.linelint.yml,.pre-commit-config.yaml,.yamllint.yml,CHANGES.md,CONTRIBUTING.md,CONTRIBUTORS.md,INSTALL.md,KNOWN_BUGS.md,LICENSE,README.md,SECURITY.md,SPONSORS.md,renovate.json}
+
 
 /bin/mv $modsecurity_dir_coreruleset/rules $modsecurity_dir_coreruleset/activated_rules
 
