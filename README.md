@@ -57,21 +57,21 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 4. **Install required packages and repositories**:
     ```bash
     cat <<EOF > /etc/yum.repos.d/nginx.repo
-        [nginx-stable]
-        name=nginx stable repo
-        baseurl=http://nginx.org/packages/rhel/\$releasever/\$basearch/
-        gpgcheck=1
-        enabled=1
-        gpgkey=https://nginx.org/keys/nginx_signing.key
-        module_hotfixes=true
-        
-        [nginx-mainline]
-        name=nginx mainline repo
-        baseurl=http://nginx.org/packages/mainline/rhel/\$releasever/\$basearch/
-        gpgcheck=1
-        enabled=0
-        gpgkey=https://nginx.org/keys/nginx_signing.key
-        module_hotfixes=true
+    [nginx-stable]
+    name=nginx stable repo
+    baseurl=http://nginx.org/packages/rhel/\$releasever/\$basearch/
+    gpgcheck=1
+    enabled=1
+    gpgkey=https://nginx.org/keys/nginx_signing.key
+    module_hotfixes=true
+    
+    [nginx-mainline]
+    name=nginx mainline repo
+    baseurl=http://nginx.org/packages/mainline/rhel/\$releasever/\$basearch/
+    gpgcheck=1
+    enabled=0
+    gpgkey=https://nginx.org/keys/nginx_signing.key
+    module_hotfixes=true
     EOF
     dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm -y || error_exit "Failed to install epel-release and epel-next-release packages"
     dnf install http://rpms.remirepo.net/enterprise/remi-release-9.rpm -y || error_exit "Failed to install remi-release-9.rpm package"
