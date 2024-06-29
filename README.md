@@ -65,7 +65,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 
 5. **Clone and install ModSecurity**:
     ```bash
-    git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity /usr/local/src/ModSecurity/  || error_exit "Failed to clone ModSecurity repository"
+    git clone --depth 1 -b v3/master --single-branch https://github.com/owasp-modsecurity/ModSecurity /usr/local/src/ModSecurity/  || error_exit "Failed to clone ModSecurity repository"
     cd /usr/local/src/ModSecurity/
     git submodule init
     git submodule update
@@ -75,7 +75,7 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 
 6. **Clone and compile the ModSecurity module for Nginx**:
     ```bash
-    git clone --depth 1 https://github.com/SpiderLabs/ModSecurity-nginx.git $modsecurity_nginx_dir || error_exit "Failed to clone ModSecurity-nginx repository"
+    git clone --depth 1 https://github.com/owasp-modsecurity/ModSecurity-nginx $modsecurity_nginx_dir || error_exit "Failed to clone ModSecurity-nginx repository"
     cd /usr/local/src/nginx/
     nginx_version=$(nginx -v 2>&1 | cut -d '/' -f 2)
     nginx_tar="nginx-$nginx_version.tar.gz"
