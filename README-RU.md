@@ -116,7 +116,7 @@ echo "Setup completed successfully"
 Сценарий "Установка ModSecurity, ModSecurity Nginx коннектора и правил OWASP" загружает сценарий оболочки (`install.sh`) из репозитория GitHub (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh`), устанавливает разрешения на выполнение сценария с помощью `sudo chmod +x`, а затем выполняет скрипт (`./install.sh`). Этот процесс устанавливает ModSecurity, ModSecurity Nginx коннектор и правила OWASP для веб-сервера Nginx.
 
 ```bash
-wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh && sudo chmod+x ./install.sh && sudo ./install.sh
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/install.sh && chmod+x ./install.sh && sudo ./install.sh
 ```
 
 ## Обновление правил OWASP
@@ -124,7 +124,7 @@ wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/
 Команда "Обновление правил OWASP" загружает сценарий оболочки (`upgrade-rules.sh`) из репозитория GitHub (`https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh`), устанавливает разрешения на выполнение скрипта, используя `sudo chmod +x`, а затем выполняет скрипт (`./upgrade-rules.sh`). Этот процесс обновляет правила OWASP ModSecurity для веб-серверов Nginx.
 
 ```bash
-wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && sudo chmod+x ./upgrade-rules.sh && sudo ./upgrade-rules.sh
+wget https://github.com/unixweb-info/ModSecurity3-installation-script-for-Nginx/blob/main/upgrade-rules.sh && chmod+x ./upgrade-rules.sh && sudo ./upgrade-rules.sh
 ```
 
 ## Контакт
