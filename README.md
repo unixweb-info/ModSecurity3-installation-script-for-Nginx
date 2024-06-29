@@ -56,11 +56,34 @@ This script automates the installation and configuration of ModSecurity3 for Ngi
 
 4. **Install required packages and repositories**:
     ```bash
-    dnf install $epel_packages -y || error_exit "Failed to install epel-release and epel-next-release packages"
-    dnf install $remi_repo -y || error_exit "Failed to install remi-release-9.rpm package"
+    cat <<EOF > /etc/yum.repos.d/nginx.repo
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/rhel/\$releasever/\$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+[nginx-mainline]
+name=nginx mainline repo
+baseurl=http://nginx.org/packages/mainline/rhel/\$releasever/\$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+EOF
+    dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm -y || error_exit "Failed to install epel-release and epel-next-release packages"
+    dnf install http://rpms.remirepo.net/enterprise/remi-release-9.rpm -y || error_exit "Failed to install remi-release-9.rpm package"
     dnf config-manager --set-enabled crb -y || error_exit "Failed to enable crb repository"
     dnf --enablerepo=remi install GeoIP-devel -y || error_exit "Failed to install GeoIP-devel package from remi repository"
-    log_message "Necessary packages installed"
+    # Install additional packages
+    dnf install git wget dnf-utils nano -y || error_exit "Failed to install other and required packages"
+    dnf install httpd-devel pcre pcre-devel libxml2 libxml2-devel curl curl-devel openssl openssl-devel nginx -y || error_exit "Failed to install Nginx and required packages"
+    dnf install doxygen yajl-devel gcc-c++ flex bison yajl zlib-devel autoconf automake make pkgconfig libtool redhat-rpm-config geos geos-devel geocode-glib-devel geolite2-city geolite2-country -y || error_exit "Failed to install modsecurity packages"
+    
+    # Installing the libmodsecurity package
+    dnf install libmodsecurity -y  || error_exit "Failed to install libmodsecurity dependency package"
     ```
 
 5. **Clone and install ModSecurity**:
